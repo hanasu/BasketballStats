@@ -17,6 +17,8 @@ def outputLinks(school):
 	gamelogs = Gamelogs()
 	#open a new file to store the output
 	fo = open(school + '.txt',"w")
+	#remove extraneous links
+	gamelogs.statusPageLinks = gamelogs.statusPageLinks[2:]
 	for s in gamelogs.statusPageLinks:
 		#make the list a string so it can be sliced
 		string = str(s)
