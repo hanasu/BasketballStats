@@ -3,6 +3,7 @@ import sys
 import os
 import urllib2
 from bs4 import BeautifulSoup
+from bs4 import SoupStrainer
 
 class Gamelogs():
 
@@ -38,27 +39,22 @@ def scoredata(links, school):
 		os.makedirs(outputDirectory)
 	#for each link in the school's season	
 	for filename in links:
-		parsestats(filename)
 		gameSoup = BeautifulSoup(urllib2.urlopen(filename))
 		#remove extra link formatting to get just filename alone
 		localfile = filename[38+len(school):]
 		#create a list that will hold the box score data only	
 		output = gameSoup.findAll(class_="sortable")
-		#conjoin the path with the filename for all OS versions	
 		localfile = os.path.join(outputDirectory, localfile)
-		#open a local file with that filename to store the results
-		fo = open(localfile,"w")
-		#write output line by line to the file that was just opened	
-		for o in output:
-			fo.write(str(o) + '\n')
-		fo.close
-
-def parsestats(html):
-	print html
-	statSoup = BeautifulSoup(urllib2.urlopen(html))
-	fo = open('/home/hanasu/Desktop/tdtest.txt',"w")	
-	csk = statSoup.find_all('csk')
-	fo.write(str(csk))
+		fo = open(localfile, "w")
+		fo.write(str(output))
+		outputSoup = BeautifulSoup(str(output))
+		test = open("/home/hanasu/Desktop/textonly.txt", "w")
+		line = outputSoup.findAll(text = True)
+		line = line[60:]
+		for l in line:
+			if not l.isspace():
+				test.write(str(l) + ',')
+		print "outputted"
 	
 if __name__ == '__main__':
 	#for each school as a commandline argument	
